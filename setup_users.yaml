@@ -90,14 +90,14 @@
       vars:
         nginx_controller_user:
           metadata:
-            name: "{{ users.dev.username }}" 
+            name: "{{ devname }}" 
             displayName: Developer Dave
             tags: 
             - developer
           desiredState:
             firstName: Dave
             lastName: Developer
-            password: "{{ users.dev.password }}"
+            password: "{{ devpass }}"
             roles:
               - ref: /platform/roles/developers
               - ref: /platform/roles/guest
@@ -108,14 +108,14 @@
       vars:
         nginx_controller_user:
           metadata:
-            name:  "{{ users.sre.username }}"
+            name:  "{{ srename }}"
             displayName: Reliable Susan
             tags: 
             - sre
           desiredState:
             firstName: Susan
             lastName: Reliable
-            password: "{{ users.sre.password }}"
+            password: "{{ srepass }}"
             roles:
               - ref: /platform/roles/azure_sre
               - ref: /platform/roles/guest
@@ -126,14 +126,14 @@
       vars:
         nginx_controller_user:
           metadata:
-            name:  "{{ users.k8s.username }}"
+            name:  "{{ k8sname }}"
             displayName: Uber Netes Kate
             tags: 
             - k8s
           desiredState:
             firstName: Kate
             lastName: Uber-Netes
-            password: "{{ users.k8s.password }}"
+            password: "{{ k8spass }}"
             roles:
               - ref: /platform/roles/kube_sys
               - ref: /platform/roles/guest
