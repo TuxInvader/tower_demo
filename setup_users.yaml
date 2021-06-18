@@ -1,0 +1,140 @@
+---
+- hosts: localhost
+  become: no
+  connection: local
+  gather_facts: no
+  vars:
+
+  collections:
+    - nginxinc.nginx_controller
+
+  tasks:
+    - name: Retrieve the NGINX Controller auth token
+      include_role:
+        name: nginx_controller_generate_token
+
+    - name: Configure the developer role
+      include_role:
+        name: nginx_controller_user_role
+      vars:
+        nginx_controller_user_role:
+          metadata:
+            name:  developers
+            displayName: Developers
+            description: Application Developers 
+            tags: 
+            - developer
+          desiredState:
+            permissions:
+            -
+              access: "FULL"
+              path: "/services/environments/aks-dev"
+            -
+              access: "READ"
+              path: "/services/environments/aks-prod"
+            -
+              access: "NONE"
+              path: "/services/environments/kube-sys"
+
+    - name: Configure the SRE role
+      include_role:
+        name: nginx_controller_user_role
+      vars:
+        nginx_controller_user_role:
+          metadata:
+            name:  azure_sre
+            displayName: SiteReliability
+            description: Azure SRE Team 
+            tags: 
+            - developer
+            - sre
+          desiredState:
+            permissions:
+            -
+              access: "FULL"
+              path: "/services/environments/aks-prod"
+            -
+              access: "READ"
+              path: "/services/environments/aks-dev"
+            -
+              access: "READ"
+              path: "/services/environments/kube-sys"
+
+    - name: Configure the Kube Admin role
+      include_role:
+        name: nginx_controller_user_role
+      vars:
+        nginx_controller_user_role:
+          metadata:
+            name:  kube_sys
+            displayName: KubernetesOps
+            description: Azure K8s Team 
+            tags: 
+            - developer
+            - k8s
+          desiredState:
+            permissions:
+            -
+              access: "NONE"
+              path: "/services/environments/aks-prod"
+            -
+              access: "NONE"
+              path: "/services/environments/aks-dev"
+            -
+              access: "FULL"
+              path: "/services/environments/kube-sys"
+
+    - name: Configure Developer Dave
+      include_role:
+        name: nginx_controller_user
+      vars:
+        nginx_controller_user:
+          metadata:
+            name: "{{ users.dev.username }}" 
+            displayName: Developer Dave
+            tags: 
+            - developer
+          desiredState:
+            firstName: Dave
+            lastName: Developer
+            password: "{{ users.dev.password }}"
+            roles:
+              - ref: /platform/roles/developers
+              - ref: /platform/roles/guest
+
+    - name: Configure Reliable Susan
+      include_role:
+        name: nginx_controller_user
+      vars:
+        nginx_controller_user:
+          metadata:
+            name:  "{{ users.sre.username }}"
+            displayName: Reliable Susan
+            tags: 
+            - sre
+          desiredState:
+            firstName: Susan
+            lastName: Reliable
+            password: "{{ users.sre.password }}"
+            roles:
+              - ref: /platform/roles/azure_sre
+              - ref: /platform/roles/guest
+
+    - name: Configure Uber Netes Kate
+      include_role:
+        name: nginx_controller_user
+      vars:
+        nginx_controller_user:
+          metadata:
+            name:  "{{ users.k8s.username }}"
+            displayName: Uber Netes Kate
+            tags: 
+            - k8s
+          desiredState:
+            firstName: Kate
+            lastName: Uber-Netes
+            password: "{{ users.k8s.password }}"
+            roles:
+              - ref: /platform/roles/kube_sys
+              - ref: /platform/roles/guest
+              

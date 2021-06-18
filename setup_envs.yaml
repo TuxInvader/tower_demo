@@ -1,0 +1,45 @@
+---
+- hosts: localhost
+  become: no
+  connection: local
+  gather_facts: no
+
+  collections:
+    - nginxinc.nginx_controller
+
+  tasks:
+
+    - name: Retrieve the NGINX Controller auth token
+      include_role:
+        name: nginx_controller_generate_token
+
+    - name: Configure the Azure Dev env
+      include_role:
+        name: nginx_controller_environment
+      vars:
+        nginx_controller_environment:
+          metadata:
+            name: "aks-dev"
+            displayName: "Azure Dev"
+            description: "Development Sandbox"
+
+    - name: Configure the Azure Production env
+      include_role:
+        name: nginx_controller_environment
+      vars:
+        nginx_controller_environment:
+          metadata:
+            name: "aks-prod"
+            displayName: "Azure Production"
+            description: "Live Production Environment"
+
+    - name: Configure the Azure Kubernetes env
+      include_role:
+        name: nginx_controller_environment
+      vars:
+        nginx_controller_environment:
+          metadata:
+            name: "kube-sys"
+            displayName: "Kubernetes System"
+            description: "Kubernetes Services"
+
