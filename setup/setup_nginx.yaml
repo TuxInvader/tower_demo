@@ -1,7 +1,8 @@
 ---
 - hosts: nginx
-  become: no
-  gather_facts: no
+  become: true
+  become_method: sudo
+  gather_facts: yes
 
   collections:
     - nginxinc.nginx_controller
