@@ -85,7 +85,7 @@
 
     - name: Test for users
       uri:
-        url: "{{ nginx_controller_fqdn }}/api/v1/platform/users/{{ devname }}"
+        url: "https://{{ nginx_controller_fqdn }}/api/v1/platform/users/{{ devname }}"
         method: "GET"
         status_code:
           - 200
