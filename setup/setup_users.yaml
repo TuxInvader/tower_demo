@@ -83,57 +83,75 @@
               access: "FULL"
               path: "/services/environments/kube-sys"
 
-    - name: Configure Developer Dave
-      include_role:
-        name: nginx_controller_user
-      vars:
-        nginx_controller_user:
-          metadata:
-            name: "{{ devname }}" 
-            displayName: Developer Dave
-            tags: 
-            - developer
-          desiredState:
-            firstName: Dave
-            lastName: Developer
-            password: "{{ devpass }}"
-            roles:
-              - ref: /platform/roles/developers
-              - ref: /platform/roles/guest
+    - name: Test for users
+      uri:
+        url: "{{ nginx_controller_fqdn }}/{{ nginx_controller_api_version }}/platform/users/{{ devname }}"
+        method: "GET"
+        status_code:
+          - 200
+          - 201
+          - 404
+        return_content: yes
+        validate_certs: "{{ nginx_controller_validate_certs | default(false) }}"
+        headers:
+          Cookie: "{{ nginx_controller_auth_token }}"
+      register: nginx_controller_user_status
 
-    - name: Configure Reliable Susan
-      include_role:
-        name: nginx_controller_user
-      vars:
-        nginx_controller_user:
-          metadata:
-            name:  "{{ srename }}"
-            displayName: Reliable Susan
-            tags: 
-            - sre
-          desiredState:
-            firstName: Susan
-            lastName: Reliable
-            password: "{{ srepass }}"
-            roles:
-              - ref: /platform/roles/azure_sre
-              - ref: /platform/roles/guest
+    - name: Create Users
+      block:
 
-    - name: Configure Uber Netes Kate
-      include_role:
-        name: nginx_controller_user
-      vars:
-        nginx_controller_user:
-          metadata:
-            name:  "{{ k8sname }}"
-            displayName: Uber Netes Kate
-            tags: 
-            - k8s
-          desiredState:
-            firstName: Kate
-            lastName: Uber-Netes
-            password: "{{ k8spass }}"
-            roles:
-              - ref: /platform/roles/kube_sys
-              - ref: /platform/roles/guest
-              
+      - name: Configure Developer Dave
+        include_role:
+          name: nginx_controller_user
+        vars:
+          nginx_controller_user:
+            metadata:
+              name: "{{ devname }}" 
+              displayName: Developer Dave
+              tags: 
+              - developer
+            desiredState:
+              firstName: Dave
+              lastName: Developer
+              password: "{{ devpass }}"
+              roles:
+                - ref: /platform/roles/developers
+                - ref: /platform/roles/guest
+  
+      - name: Configure Reliable Susan
+        include_role:
+          name: nginx_controller_user
+        vars:
+          nginx_controller_user:
+            metadata:
+              name:  "{{ srename }}"
+              displayName: Reliable Susan
+              tags: 
+              - sre
+            desiredState:
+              firstName: Susan
+              lastName: Reliable
+              password: "{{ srepass }}"
+              roles:
+                - ref: /platform/roles/azure_sre
+                - ref: /platform/roles/guest
+  
+      - name: Configure Uber Netes Kate
+        include_role:
+          name: nginx_controller_user
+        vars:
+          nginx_controller_user:
+            metadata:
+              name:  "{{ k8sname }}"
+              displayName: Uber Netes Kate
+              tags: 
+              - k8s
+            desiredState:
+              firstName: Kate
+              lastName: Uber-Netes
+              password: "{{ k8spass }}"
+              roles:
+                - ref: /platform/roles/kube_sys
+                - ref: /platform/roles/guest
+
+      when: nginx_controller_user_status.status == 404
