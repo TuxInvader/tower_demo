@@ -25,7 +25,7 @@
 
     - name: Configure the location
       include_role:
-        name: nginxinc.nginx_controller_location
+        name: nginx_controller_location
       vars:
         nginx_controller_location:
           metadata:
