@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: name_mbctrl1
   become: no
   connection: local
   gather_facts: no
