@@ -16,16 +16,17 @@
         api_version: v1
         kind: ConfigMap
         state: present
-        data:
-          prometheus.yml: |-
-            apiVersion: 1
-              - access: proxy
-                editable: true
-                name: Prometheus
-                orgId: 1
-                type: prometheus
-                url: http://prometheus-service.monitoring:9090
-                version: 1
+        definition:
+          data:
+            prometheus.yml: |-
+              apiVersion: 1
+                - access: proxy
+                  editable: true
+                  name: Prometheus
+                  orgId: 1
+                  type: prometheus
+                  url: http://prometheus-service.monitoring:9090
+                  version: 1
 
     - name: Create Grafana Dash Provider
       kubernetes.core.k8s:
@@ -33,21 +34,22 @@
         kind: ConfigMap
         name: grafana-dash-providers
         namespace: monitoring
-        data:
-          ds_prometheus.yml: |-
-            apiVersion: 1
-            providers:
-              - name: 'Prometheus'
-                orgId: 1
-                folder: ''
-                type: file
-                disableDeletion: false
-                editable: true
-                options:
-                  path: /dashboards
+        definition:
+          data:
+            ds_prometheus.yml: |-
+              apiVersion: 1
+              providers:
+                - name: 'Prometheus'
+                  orgId: 1
+                  folder: ''
+                  type: file
+                  disableDeletion: false
+                  editable: true
+                  options:
+                    path: /dashboards
                   
     - name: Upload Grafana Dashboards
       kubernetes.core.k8s:
         state: present
-        definition: "{{ lookup('file', 'manifests/dashboards.yaml') | from_yaml }}"
+        src: manifests/dashboards.yaml
 
