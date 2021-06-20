@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  become: no
+  gather_facts: no
+  vars:
+
+  collections:
+    - kubernetes.core
+
+  tasks:
+
+    - name: Create Grafana DataSource
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/prometheus.yaml
+
