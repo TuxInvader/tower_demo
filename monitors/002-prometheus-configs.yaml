@@ -9,7 +9,7 @@
 
   tasks:
 
-    - name: Create Grafana DataSource
+    - name: Create Prometheus Config
       kubernetes.core.k8s:
         state: present
         src: manifests/prometheus.yaml
