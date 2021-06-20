@@ -54,6 +54,8 @@
       kubernetes.core.k8s:
         state: present
         definition:
+          apiVersion: v1
+          kind: Service
           metadata:
             name: prometheus-service
             namespace: monitoring
