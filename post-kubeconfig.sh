@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Upload a kubeconfig to tower.
+# This script doesn't support multiple-contexts:
+# $ rm ~/.kube/config
+# $ az aks get-credentials --resource-group <group> --name <aks-cluster>
+
 config="$( awk '{printf "%s\\n", $0}' ~/.kube/config )"
 curl="curl -k -s "
 
@@ -17,11 +22,26 @@ get_type() {
     "https://${TOWER_HOST}/api/v2/credential_types/?search=kubeconfig" | jq -r '.results[0].id'
 }
 
-upload() {
-  $curl -d "$body" -X POST \
-    -H "Content-Type: application/json" \
+get_cred() {
+  $curl -H "Content-Type: application/json" \
     --oauth2-bearer $( echo $tokens | jq -r .access_token ) \
-    "https://${TOWER_HOST}/api/v2/credentials/"
+    "https://${TOWER_HOST}/api/v2/credentials/?search=AKS-Kube-Config" | jq -r '.results[0].id'
+}
+
+upload() {
+  cred_id=$(get_cred)
+  if [ "$cred_id" == "null" ]
+  then
+    $curl -i -d "$body" -X POST \
+      -H "Content-Type: application/json" \
+      --oauth2-bearer $( echo $tokens | jq -r .access_token ) \
+      "https://${TOWER_HOST}/api/v2/credentials/"
+  else
+    $curl -i -d "$body" -X PUT \
+      -H "Content-Type: application/json" \
+      --oauth2-bearer $( echo $tokens | jq -r .access_token ) \
+      "https://${TOWER_HOST}/api/v2/credentials/${cred_id}/"
+  fi
 }
 
 tokens=$(auth)
@@ -42,10 +62,11 @@ read -r -d '' body <<EOF
 EOF
 
 output=$(upload)
-if [ $? -eq 0 ]
+result=$( echo "$output" | egrep "20[01] (Created|OK)" )
+if [ "$result" ]
 then
-  echo "Success"
+  echo "Success: $result"
 else
-  echo "Fail: $output"
+  echo "Failed: $output"
 fi
 
