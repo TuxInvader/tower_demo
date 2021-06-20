@@ -33,7 +33,7 @@
                     image: grafana/grafana:8.0.3
                     env:
                       - name: GF_SECURITY_ADMIN_PASSWORD
-                        value: "{{ SOME_PASSWORD }}"
+                        value: "{{ extra_password }}"
                     ports:
                       - containerPort: 3000
                     volumeMounts:
