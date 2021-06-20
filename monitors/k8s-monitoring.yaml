@@ -9,6 +9,10 @@
 
   tasks:
 
+    - name: debug
+      debug:
+        msg: "{{ lookup('env', 'K8S_AUTH_KUBECONFIG') }}"
+
     - name: Create monitoring namespace
       kubernetes.core.k8s:
         name: monitoring
