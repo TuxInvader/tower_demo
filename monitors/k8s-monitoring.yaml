@@ -1,5 +1,5 @@
 ---
-- hosts: controller
+- hosts: localhost
   become: no
   gather_facts: no
   vars:
