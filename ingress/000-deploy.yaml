@@ -12,3 +12,6 @@
 - name: Execute 002-rbac.yaml
   include: 002-rbac.yaml
 
+- name: Execute 003-deploy.yaml
+  include: 003-deploy.yaml
+
