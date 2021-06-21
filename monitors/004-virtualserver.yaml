@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  become: no
+  gather_facts: no
+  vars:
+
+  collections:
+    - kubernetes.core
+
+  tasks:
+
+    - name: Grafana Virtual Server
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: k8s.nginx.org/v1
+          kind: VirtualServer
+          metadata:
+            name: grafana-ingress
+            namespace: monitoring
+          spec:
+            host: grafana.nginx.demo
+            upstreams:
+            - name: web80
+              service: grafana-service
+              port: 80
+            routes:
+            - path: /
+              action:
+                pass: web80
+
