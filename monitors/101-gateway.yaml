@@ -22,6 +22,6 @@
             name: monitoring-cert
           desiredState:
             type: PEM
-            privateKey: {{ ssl_key }}
-            publicCert: {{ ssl_cert }}
+            privateKey: "{{ ssl_key }}"
+            publicCert: "{{ ssl_cert }}"
 
