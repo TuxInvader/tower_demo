@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  become: no
+  gather_facts: no
+  vars:
+
+  collections:
+    - kubernetes.core
+
+  tasks:
+
+    - name: Create Ingress namespace
+      kubernetes.core.k8s:
+        name: nginx-ingress
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    - name: Pull Secret
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          kind: Secret
+          api_version: v1
+          type: kubernetes.io/dockerconfigjson
+          metadata:
+            name: azure-registry
+            namespace: nginx-ingress
+          data:
+            .dockerconfigjson: '{{ dockerconfig }}'
