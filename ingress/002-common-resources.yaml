@@ -1,0 +1,25 @@
+- hosts: localhost
+  become: no
+  gather_facts: no
+  vars:
+
+  collections:
+    - kubernetes.core
+
+  tasks:
+
+    - name: Setup Default Secret
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/common/default-server-secret.yaml
+
+    - name: Setup Config map
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/common/nginx-config.yaml
+
+    - name: Setup Ingress Class
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/common/ingress-class.yaml
+

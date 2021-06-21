@@ -1,0 +1,14 @@
+---
+
+- name: Execute 001-namespace.yaml
+  include: 001-namespace.yaml
+
+- name: Execute 002-common-resources.yaml
+  include: 002-common-resources.yaml
+
+- name: Execute 002-crds.yaml
+  include: 002-crds.yaml
+
+- name: Execute 002-rbac.yaml
+  include: 002-rbac.yaml
+

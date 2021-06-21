@@ -1,0 +1,46 @@
+- hosts: localhost
+  become: no
+  gather_facts: no
+  vars:
+
+  collections:
+    - kubernetes.core
+
+  tasks:
+
+    - name: Setup k8s.nginx.org_virtualservers.yaml
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/kic/crds/k8s.nginx.org_virtualservers.yaml
+
+    - name: Setup k8s.nginx.org_virtualserverroutes.yaml
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/kic/crds/k8s.nginx.org_virtualserverroutes.yaml
+
+    - name: Setup k8s.nginx.org_transportservers.yaml
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/kic/crds/k8s.nginx.org_transportservers.yaml
+
+    - name: Setup k8s.nginx.org_policies.yaml
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/kic/crds/k8s.nginx.org_policies.yaml
+
+    - name: Setup appprotect.f5.com_aplogconfs.yaml
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/kic/crds/appprotect.f5.com_aplogconfs.yaml
+
+    - name: Setup appprotect.f5.com_appolicies.yaml
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/kic/crds/appprotect.f5.com_appolicies.yaml
+
+    - name: Setup appprotect.f5.com_apusersigs.yaml
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/kic/crds/appprotect.f5.com_apusersigs.yaml
+
+

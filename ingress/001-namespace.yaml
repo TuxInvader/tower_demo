@@ -16,7 +16,17 @@
         kind: Namespace
         state: present
 
-    - name: Pull Secret
+    - name: Create Service Account
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: ServiceAccount
+          metadata:
+            name: nginx-ingress 
+            namespace: nginx-ingress
+
+    - name: Create Pull Secret
       kubernetes.core.k8s:
         state: present
         definition:

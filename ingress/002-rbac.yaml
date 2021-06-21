@@ -1,0 +1,20 @@
+- hosts: localhost
+  become: no
+  gather_facts: no
+  vars:
+
+  collections:
+    - kubernetes.core
+
+  tasks:
+
+    - name: Setup RBAC
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/kic/rbac/rbac.yaml
+
+    - name: Setup AP RBAC
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/kic/rbac/ap-rbac.yaml
+
