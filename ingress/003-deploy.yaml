@@ -94,11 +94,13 @@
             type: NodePort
             ports:
               - name: https
-                port: 30443
+                nodePort: 30443
+                port: 443
                 targetPort: 443
                 protocol: TCP
               - name: http
-                port: 30080
+                nodePort: 30080
+                port: 80
                 targetPort: 80
                 protocol: TCP
 
