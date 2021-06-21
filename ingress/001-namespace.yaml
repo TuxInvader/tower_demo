@@ -37,4 +37,4 @@
             name: azure-registry
             namespace: nginx-ingress
           data:
-            .dockerconfigjson: '{{ dockerconfig }}'
+            .dockerconfigjson: '{{ cr_dockerconfig }}'
