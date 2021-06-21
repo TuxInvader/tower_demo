@@ -32,7 +32,7 @@
               spec:
                 serviceAccountName: nginx-ingress
                 imagePullSecrets:
-                  - name: registry
+                  - name: azure-registry
                 containers:
                 - image: "{{ cr_url }}/nginx/nginx-plus-ingress-nap:1.11.3"
                   imagePullPolicy: "Always"
