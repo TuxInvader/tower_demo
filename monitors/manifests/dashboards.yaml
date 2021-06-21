@@ -81,7 +81,7 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_connections_accepted[30s]))",
+                  "expr": "sum(rate(nginxplus_connections_accepted[30s]))",
                   "interval": "",
                   "intervalFactor": 1,
                   "legendFormat": "Accepted",
@@ -90,7 +90,7 @@ data:
                   "step": 2
                 },
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_connections_dropped[30s]))",
+                  "expr": "sum(rate(nginxplus_connections_dropped[30s]))",
                   "interval": "",
                   "intervalFactor": 1,
                   "legendFormat": "Dropped",
@@ -98,7 +98,7 @@ data:
                   "step": 2
                 },
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_connections_idle[30s]))",
+                  "expr": "sum(rate(nginxplus_connections_idle[30s]))",
                   "interval": "",
                   "intervalFactor": 1,
                   "legendFormat": "Idle",
@@ -106,7 +106,7 @@ data:
                   "step": 2
                 },
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_connections_active[30s]))",
+                  "expr": "sum(rate(nginxplus_connections_active[30s]))",
                   "interval": "",
                   "intervalFactor": 1,
                   "legendFormat": "active",
@@ -209,7 +209,7 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "avg(irate(nginx_ingress_nginxplus_upstream_server_requests{upstream=~\"^vs_cheese-demo_www-whatcheese-web.*\"}[30s])) by (upstream)",
+                  "expr": "avg(irate(nginxplus_upstream_server_requests{upstream=~\"^vs_cheese-demo_www-whatcheese-web.*\"}[30s])) by (upstream)",
                   "interval": "",
                   "intervalFactor": 1,
                   "legendFormat": "{{upstream}}",
@@ -312,7 +312,7 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_http_requests_total[30s]))",
+                  "expr": "sum(rate(nginxplus_http_requests_total[30s]))",
                   "interval": "",
                   "intervalFactor": 1,
                   "legendFormat": "Active",
@@ -320,7 +320,7 @@ data:
                   "step": 2
                 },
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_upstream_server_requests[30s]))",
+                  "expr": "sum(rate(nginxplus_upstream_server_requests[30s]))",
                   "interval": "",
                   "intervalFactor": 1,
                   "legendFormat": "Upstream",
@@ -425,7 +425,7 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "avg(irate(nginx_ingress_nginxplus_server_zone_requests{server_zone=~\".*whatcheese.*\"}[30s])) by (server_zone)",
+                  "expr": "avg(irate(nginxplus_server_zone_requests{server_zone=~\".*whatcheese.*\"}[30s])) by (server_zone)",
                   "interval": "",
                   "intervalFactor": 1,
                   "legendFormat": "{{server_zone}}",
@@ -433,7 +433,7 @@ data:
                   "step": 2
                 },
                 {
-                  "expr": "avg(irate(nginx_ingress_nginxplus_server_zone_responses{server_zone=~\".*whatcheese.*\"}[30s])) by (code)",
+                  "expr": "avg(irate(nginxplus_server_zone_responses{server_zone=~\".*whatcheese.*\"}[30s])) by (code)",
                   "interval": "",
                   "intervalFactor": 1,
                   "legendFormat": "{{code}}",
@@ -880,7 +880,7 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum( rate(nginx_ingress_nginxplus_server_zone_received[5m]))",
+                  "expr": "sum( rate(nginxplus_server_zone_received[5m]))",
                   "format": "time_series",
                   "instant": false,
                   "interval": "10s",
@@ -891,7 +891,7 @@ data:
                   "step": 10
                 },
                 {
-                  "expr": "sum( rate(nginx_ingress_nginxplus_server_zone_sent[5m]))",
+                  "expr": "sum( rate(nginxplus_server_zone_sent[5m]))",
                   "format": "time_series",
                   "hide": false,
                   "interval": "10s",
@@ -1081,7 +1081,7 @@ data:
               "pluginVersion": "7.3.5",
               "targets": [
                 {
-                  "expr": "sum( irate(nginx_ingress_nginxplus_http_requests_total{kubernetes_pod_name=\"$controller\"}[5m]))",
+                  "expr": "sum( irate(nginxplus_http_requests_total{kubernetes_pod_name=\"$controller\"}[5m]))",
                   "interval": "",
                   "legendFormat": "",
                   "refId": "A"
@@ -1200,7 +1200,7 @@ data:
               "repeatDirection": "h",
               "targets": [
                 {
-                  "expr": "sum( irate(nginx_ingress_nginxplus_server_zone_requests{kubernetes_pod_name=\"$controller\"}[5m]))",
+                  "expr": "sum( irate(nginxplus_server_zone_requests{kubernetes_pod_name=\"$controller\"}[5m]))",
                   "format": "time_series",
                   "hide": false,
                   "instant": false,
@@ -1363,19 +1363,19 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_server_zone_responses{code=\"1xx\"}[5m])) by (ingress)",
+                  "expr": "sum(rate(nginxplus_server_zone_responses{code=\"1xx\"}[5m])) by (ingress)",
                   "interval": "",
                   "legendFormat": "Informational",
                   "refId": "A"
                 },
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_server_zone_responses{code=\"2xx\"}[5m]))",
+                  "expr": "sum(rate(nginxplus_server_zone_responses{code=\"2xx\"}[5m]))",
                   "interval": "",
                   "legendFormat": "Success",
                   "refId": "B"
                 },
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_server_zone_responses{code=\"3xx\"}[5m]))",
+                  "expr": "sum(rate(nginxplus_server_zone_responses{code=\"3xx\"}[5m]))",
                   "format": "time_series",
                   "hide": false,
                   "instant": false,
@@ -1499,7 +1499,7 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_server_zone_responses{code=~\"[4].*\"}[2m]))",
+                  "expr": "sum(rate(nginxplus_server_zone_responses{code=~\"[4].*\"}[2m]))",
                   "format": "time_series",
                   "instant": false,
                   "interval": "",
@@ -1510,7 +1510,7 @@ data:
                   "step": 10
                 },
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_server_zone_responses{code=~\"[5].*\"}[2m]))",
+                  "expr": "sum(rate(nginxplus_server_zone_responses{code=~\"[5].*\"}[2m]))",
                   "format": "time_series",
                   "instant": false,
                   "interval": "",
@@ -1648,7 +1648,7 @@ data:
               "pluginVersion": "7.3.5",
               "targets": [
                 {
-                  "expr": "sum(nginx_ingress_nginxplus_up{kubernetes_pod_name=\"$controller\"})",
+                  "expr": "sum(nginxplus_up{kubernetes_pod_name=\"$controller\"})",
                   "interval": "",
                   "legendFormat": "",
                   "refId": "A"
@@ -1728,7 +1728,7 @@ data:
               "pluginVersion": "7.3.5",
               "targets": [
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_server_zone_responses{code!~\"[4-5].*\"}[5m])) / sum(rate(nginx_ingress_nginxplus_server_zone_responses[5m]))",
+                  "expr": "sum(rate(nginxplus_server_zone_responses{code!~\"[4-5].*\"}[5m])) / sum(rate(nginxplus_server_zone_responses[5m]))",
                   "format": "time_series",
                   "hide": false,
                   "interval": "",
@@ -1812,19 +1812,19 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_upstream_server_responses{code=\"1xx\"}[5m]))",
+                  "expr": "sum(rate(nginxplus_upstream_server_responses{code=\"1xx\"}[5m]))",
                   "interval": "",
                   "legendFormat": "Informational",
                   "refId": "A"
                 },
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_upstream_server_responses{code=\"2xx\"}[5m]))",
+                  "expr": "sum(rate(nginxplus_upstream_server_responses{code=\"2xx\"}[5m]))",
                   "interval": "",
                   "legendFormat": "Success",
                   "refId": "B"
                 },
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_upstream_server_responses{code=\"3xx\"}[5m]))",
+                  "expr": "sum(rate(nginxplus_upstream_server_responses{code=\"3xx\"}[5m]))",
                   "interval": "",
                   "legendFormat": "Redirection",
                   "refId": "C"
@@ -1924,13 +1924,13 @@ data:
               "pluginVersion": "7.3.5",
               "targets": [
                 {
-                  "expr": "count(nginx_ingress_nginxplus_upstream_server_state)",
+                  "expr": "count(nginxplus_upstream_server_state)",
                   "interval": "",
                   "legendFormat": "",
                   "refId": "A"
                 },
                 {
-                  "expr": "count(nginx_ingress_nginxplus_upstream_server_state) / sum(kube_pod_status_phase)",
+                  "expr": "count(nginxplus_upstream_server_state) / sum(kube_pod_status_phase)",
                   "hide": true,
                   "interval": "",
                   "legendFormat": "",
@@ -1995,13 +1995,13 @@ data:
               "steppedLine": false,
               "targets": [
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_upstream_server_responses{code=~\"[4].*\"}[2m]))",
+                  "expr": "sum(rate(nginxplus_upstream_server_responses{code=~\"[4].*\"}[2m]))",
                   "interval": "",
                   "legendFormat": "Client Errors",
                   "refId": "A"
                 },
                 {
-                  "expr": "sum(rate(nginx_ingress_nginxplus_upstream_server_responses{code=~\"[5].*\"}[2m]))",
+                  "expr": "sum(rate(nginxplus_upstream_server_responses{code=~\"[5].*\"}[2m]))",
                   "interval": "",
                   "legendFormat": "Server Errors",
                   "refId": "B"
@@ -2118,7 +2118,7 @@ data:
               "pluginVersion": "7.3.5",
               "targets": [
                 {
-                  "expr": "sum(nginx_ingress_nginxplus_upstream_server_state)",
+                  "expr": "sum(nginxplus_upstream_server_state)",
                   "interval": "",
                   "legendFormat": "",
                   "refId": "A"
@@ -2330,7 +2330,7 @@ data:
                   "value": "$__all"
                 },
                 "datasource": "Prometheus",
-                "definition": "label_values(nginx_ingress_nginxplus_server_zone_processing,server_zone)",
+                "definition": "label_values(nginxplus_server_zone_processing,server_zone)",
                 "error": null,
                 "hide": 0,
                 "includeAll": true,
@@ -2338,7 +2338,7 @@ data:
                 "multi": true,
                 "name": "server_zone",
                 "options": [],
-                "query": "label_values(nginx_ingress_nginxplus_server_zone_processing,server_zone)",
+                "query": "label_values(nginxplus_server_zone_processing,server_zone)",
                 "refresh": 1,
                 "regex": "",
                 "skipUrlSync": false,
@@ -2357,7 +2357,7 @@ data:
                   "value": "$__all"
                 },
                 "datasource": "Prometheus",
-                "definition": "label_values(nginx_ingress_nginxplus_upstream_server_state,server)",
+                "definition": "label_values(nginxplus_upstream_server_state,server)",
                 "error": null,
                 "hide": 0,
                 "includeAll": true,
@@ -2365,7 +2365,7 @@ data:
                 "multi": true,
                 "name": "server",
                 "options": [],
-                "query": "label_values(nginx_ingress_nginxplus_upstream_server_state,server)",
+                "query": "label_values(nginxplus_upstream_server_state,server)",
                 "refresh": 2,
                 "regex": "",
                 "skipUrlSync": false,
@@ -2384,7 +2384,7 @@ data:
                   "value": "$__all"
                 },
                 "datasource": "Prometheus",
-                "definition": "label_values(nginx_ingress_nginxplus_upstream_server_state,upstream)",
+                "definition": "label_values(nginxplus_upstream_server_state,upstream)",
                 "error": null,
                 "hide": 0,
                 "includeAll": true,
@@ -2392,7 +2392,7 @@ data:
                 "multi": true,
                 "name": "upstream",
                 "options": [],
-                "query": "label_values(nginx_ingress_nginxplus_upstream_server_state,upstream)",
+                "query": "label_values(nginxplus_upstream_server_state,upstream)",
                 "refresh": 2,
                 "regex": "",
                 "skipUrlSync": false,
