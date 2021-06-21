@@ -16,7 +16,7 @@
       include_role:
         name: nginx_controller_certificate
       vars:
-        nginx_controller_environment: kube-sys
+        nginx_controller_environmentName: kube-sys
         nginx_controller_certificate:
           metadata:
             name: monitoring-cert
