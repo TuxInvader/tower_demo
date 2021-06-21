@@ -12,6 +12,17 @@
       include_role:
         name: nginx_controller_generate_token
 
+    - name: Configure the Grafana Application
+      include_role:
+        name: nginx_controller_application
+      vars:
+        nginx_controller_environmentName: kube-sys
+        nginx_controller_app:
+          metadata:
+            name: "grafana"
+            displayName: "Grafana Dashboards"
+            description: "Grafana dash for Kubernetes"
+
     - name: Configure the Monitoring Certificate
       include_role:
         name: nginx_controller_certificate
@@ -20,8 +31,72 @@
         nginx_controller_certificate:
           metadata:
             name: monitoring-cert
+            displayName: Monitoring Cert
           desiredState:
             type: PEM
             privateKey: "{{ ssl_key }}"
             publicCert: "{{ ssl_cert }}"
+
+    - name: Configure the Grafana Gateway
+      include_role:
+        name: nginx_controller_gateway
+      vars:
+        nginx_controller_environmentName: kube-sys
+        nginx_controller_gateway:
+          metadata:
+            name: grafana
+            displayName: Grafana Gateway
+          desiredState:
+            ingress:
+              placement:
+                instancerefs:
+                  - ref: /infrastructure/locations/azure-uk/instances/{{ nginx_instance }}
+              uris:
+                'http://grafana.nginx.demo': {}
+                'https://grafana.nginx.demo': {}
+              tls:
+                certRef:
+                  ref: "/services/environments/kube-sys/certs/monitoring-cert"
+                protocols:
+                  - TLSv1.2
+                  - TLSv1.3
+                preferServerCipher: DISABLED
+                sessionCache: SHARED
+
+
+    - name: Configure the Grafana Component
+      include_role:
+        name: nginx_controller_component
+      vars:
+        nginx_controller_environmentName: kube-sys
+        nginx_controller_appName: grafana
+        nginx_controller_component:
+          metadata:
+            name: grafana-ui
+            displayName: Grafana Web UI
+          desiredState:
+            backend:
+              monitoring:
+                response:
+                  status:
+                    match: true
+                    range:
+                      startCode: 200
+                      endCode: 404
+                uri: /
+              workloadGroups:
+                group:
+                  uris:
+                    "http://192.168.0.4:30080": {}
+                    "http://192.168.0.5:30080": {}
+                  loadBalancingMethod:
+                    type: ROUND_ROBIN
+              keepAlive:
+                connections: 10
+                requestsPerConn: 100
+            ingress:
+              gatewayRefs:
+                - ref: "/services/environments/kube-sys/gateways/grafana"
+              uris:
+                /: {}
 
