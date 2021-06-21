@@ -1,0 +1,27 @@
+---
+- hosts: controller
+  become: no
+  gather_facts: no
+
+  collections:
+    - nginxinc.nginx_controller
+
+  tasks:
+
+    - name: Retrieve the NGINX Controller auth token
+      include_role:
+        name: nginx_controller_generate_token
+
+    - name: Configure the Monitoring Certificate
+      include_role:
+        name: nginx_controller_certificate
+      vars:
+        nginx_controller_environment: kube-sys
+        nginx_controller_certificate:
+          metadata:
+            name: monitoring-cert
+          desiredState:
+            type: PEM
+            privateKey: {{ ssl_key }}
+            publicCert: {{ ssl_cert }}
+
