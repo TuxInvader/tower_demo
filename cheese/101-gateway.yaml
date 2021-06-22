@@ -78,8 +78,8 @@
                 instancerefs:
                   - ref: /infrastructure/locations/azure-uk/instances/{{ nginx_instance }}
               uris:
-                'http://www.whatcheese.nginx.demo': {}
-                'https://www.whatcheese.nginx.demo': {}
+                'http://api.whatcheese.nginx.demo': {}
+                'https://api.whatcheese.nginx.demo': {}
               tls:
                 certRef:
                   ref: "/services/environments/aks-prod/certs/whatcheese-cert"
