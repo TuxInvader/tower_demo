@@ -77,6 +77,7 @@
                     - -enable-app-protect
                     - -enable-prometheus-metrics
                     - -v=3 # Enables extensive logging. Useful for troubleshooting.
+                    - -enable-preview-policies
                   #- -report-ingress-status
                   #- -external-service=nginx-ingress
                   #- -global-configuration=$(POD_NAMESPACE)/nginx-configuration
