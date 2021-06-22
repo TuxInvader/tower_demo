@@ -71,8 +71,6 @@
             namespace: whatcheese
           spec:
             host: "www.whatcheese.nginx.demo"
-            tls:
-              secret: whatcheese-cert
             upstreams:
             - name: webv1
               service: whatcheese-web
@@ -106,8 +104,6 @@
             name: api-whatcheese-web-vs
             namespace: whatcheese
           spec:
-            tls:
-              secret: whatcheese-cert
             host: "api.whatcheese.nginx.demo"
             #policies:
             #  - name: cheese-waf
