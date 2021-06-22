@@ -74,7 +74,7 @@
                     - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
                     - -enable-app-protect
                     - -enable-prometheus-metrics
-                  #- -v=3 # Enables extensive logging. Useful for troubleshooting.
+                    - -v=3 # Enables extensive logging. Useful for troubleshooting.
                   #- -report-ingress-status
                   #- -external-service=nginx-ingress
                   #- -global-configuration=$(POD_NAMESPACE)/nginx-configuration
