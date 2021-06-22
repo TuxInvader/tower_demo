@@ -112,7 +112,7 @@
  
             ingress:
               gatewayRefs:
-                - ref: "/services/environments/aks-prod/gateways/cheese-web-gw"
+                - ref: "/services/environments/aks-prod/gateways/cheese-api-gw"
               uris:
                 /: {}
 
