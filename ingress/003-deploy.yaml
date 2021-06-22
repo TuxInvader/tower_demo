@@ -27,10 +27,10 @@
               metadata:
                 labels:
                   app: nginx-ingress
-              annotations:
-                prometheus.io/scrape: "true"
-                prometheus.io/port: "9113"
-                prometheus.io/path: "/metrics"
+              #annotations:
+              #  prometheus.io/scrape: "true"
+              #  prometheus.io/port: "9113"
+              #  prometheus.io/path: "/metrics"
               spec:
                 serviceAccountName: nginx-ingress
                 imagePullSecrets:
@@ -76,6 +76,7 @@
                     - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
                     - -enable-app-protect
                     - -enable-prometheus-metrics
+                    - -prometheus-metrics-listen-port=9113
                     - -v=3 # Enables extensive logging. Useful for troubleshooting.
                     - -enable-preview-policies
                   #- -report-ingress-status
