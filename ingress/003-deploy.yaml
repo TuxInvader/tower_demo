@@ -8,7 +8,8 @@
 
   tasks:
 
-    - name: Setup Default Secret
+    # Deploy NGINX Ingress Controller
+    - name: Deplor NGINX Plus KIC with NAP
       kubernetes.core.k8s:
         state: present
         definition:
