@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  become: no
+  gather_facts: no
+  vars:
+
+  collections:
+    - kubernetes.core
+
+  tasks:
+
+    - name: Create Cheese namespace
+      kubernetes.core.k8s:
+        name: whatcheese
+        api_version: v1
+        kind: Namespace
+        state: present
+

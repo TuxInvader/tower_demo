@@ -1,0 +1,92 @@
+---
+- hosts: localhost
+  become: no
+  gather_facts: no
+  vars:
+
+  collections:
+    - kubernetes.core
+
+  tasks:
+
+    - name: Cheese Webv1 Service
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          kind: Service
+          apiVersion: v1
+          metadata:
+            name: whatcheese-web
+            namespace: whatcheese
+          spec:
+            selector:
+              app: whatcheese-web
+            type: ClusterIP
+            clusterIP: None
+            ports:
+              - name: http
+                port: 80
+                targetPort: 80
+                protocol: TCP
+
+
+    - name: Cheese DB Service
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          kind: Service
+          apiVersion: v1
+          metadata:
+            name: whatcheese-db
+            namespace: whatcheese
+          spec:
+            selector:
+              app: whatcheese-db
+            type: ClusterIP
+            ports:
+              - name: mysql
+                port: 3306
+                targetPort: 3306
+                protocol: TCP
+
+    - name: Cheese API Service
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          kind: Service
+          apiVersion: v1
+          metadata:
+            name: whatcheese-api
+            namespace: whatcheese
+          spec:
+            selector:
+              app: whatcheese-api
+            type: NodePort
+            type: ClusterIP
+            clusterIP: None
+            ports:
+              - name: http
+                port: 80
+                targetPort: 80
+                protocol: TCP
+
+    - name: Cheese Webv2 Service
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          kind: Service
+          apiVersion: v1
+          metadata:
+            name: whatcheese-web-v2
+            namespace: whatcheese
+          spec:
+            selector:
+              app: whatcheese-web-v2
+            type: ClusterIP
+            clusterIP: None
+            ports:
+              - name: http
+                port: 80
+                targetPort: 80
+                protocol: TCP
+

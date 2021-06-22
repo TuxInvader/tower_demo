@@ -1,0 +1,114 @@
+---
+- hosts: controller
+  become: no
+  gather_facts: no
+
+  collections:
+    - nginxinc.nginx_controller
+
+  tasks:
+
+    - name: Configure the Whatcheese Component
+      include_role:
+        name: nginx_controller_component
+      vars:
+        nginx_controller_environmentName: aks-prod
+        nginx_controller_appName: whatcheese
+        nginx_controller_component:
+          metadata:
+            name: whatcheese-web
+            displayName: Cheese Web Site
+          desiredState:
+            backend:
+              monitoring:
+                response:
+                  status:
+                    match: true
+                    range:
+                      startCode: 200
+                      endCode: 404
+                uri: /
+              workloadGroups:
+                group:
+                  uris:
+                    "http://192.168.0.4:30080": {}
+                    "http://192.168.0.5:30080": {}
+                  loadBalancingMethod:
+                    type: ROUND_ROBIN
+              keepAlive:
+                connections: 10
+                requestsPerConn: 100
+
+            programmability:
+              responseHeaderModifications:
+                - action: "ADD"
+                  headerName: "Access-Control-Allow-Origin"
+                  headerValue: "*"
+                  responseCodeFilter: "ALWAYS"
+
+            #security:
+            #  strategyRef:
+            #    ref: /services/strategies/balanced_default
+            #  waf:
+            #    isEnabled: true
+            #    isMonitorOnly: false
+            #    signatureOverrides: {}
+ 
+            ingress:
+              gatewayRefs:
+                - ref: "/services/environments/aks-prod/gateways/cheese-web-gw"
+              uris:
+                /: {}
+
+    - name: Configure the Whatcheese API Component
+      include_role:
+        name: nginx_controller_component
+      vars:
+        nginx_controller_environmentName: aks-prod
+        nginx_controller_appName: whatcheese
+        nginx_controller_component:
+          metadata:
+            name: whatcheese-api
+            displayName: Cheese API
+          desiredState:
+            backend:
+              monitoring:
+                response:
+                  status:
+                    match: true
+                    range:
+                      startCode: 200
+                      endCode: 404
+                uri: /
+              workloadGroups:
+                group:
+                  uris:
+                    "http://192.168.0.4:30080": {}
+                    "http://192.168.0.5:30080": {}
+                  loadBalancingMethod:
+                    type: ROUND_ROBIN
+              keepAlive:
+                connections: 10
+                requestsPerConn: 100
+
+            programmability:
+              responseHeaderModifications:
+                - action: "ADD"
+                  headerName: "Access-Control-Allow-Origin"
+                  headerValue: "*"
+                  responseCodeFilter: "ALWAYS"
+
+            security:
+              rateLimits:
+                cheeseApiLimit:
+                  rate: 3r/s
+                  statusCode: 429
+                  burstBeforeReject: 3
+                  key: "$binary_remote_addr"
+ 
+            ingress:
+              gatewayRefs:
+                - ref: "/services/environments/aks-prod/gateways/cheese-web-gw"
+              uris:
+                /: {}
+

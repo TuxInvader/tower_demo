@@ -1,0 +1,91 @@
+---
+- hosts: controller
+  become: no
+  gather_facts: no
+
+  collections:
+    - nginxinc.nginx_controller
+
+  tasks:
+
+    - name: Retrieve the NGINX Controller auth token
+      include_role:
+        name: nginx_controller_generate_token
+
+    - name: Configure the Whatcheese Application
+      include_role:
+        name: nginx_controller_application
+      vars:
+        nginx_controller_environmentName: aks-prod
+        nginx_controller_app:
+          metadata:
+            name: "whatcheese"
+            displayName: "Whatcheese Application"
+            description: "Whatcheese dot com"
+
+    - name: Configure the Whatcheese Certificate
+      include_role:
+        name: nginx_controller_certificate
+      vars:
+        nginx_controller_environmentName: aks-prod
+        nginx_controller_certificate:
+          metadata:
+            name: whatcheese-cert
+            displayName: Whatcheese Cert
+          desiredState:
+            type: PEM
+            privateKey: "{{ ssl_key }}"
+            publicCert: "{{ ssl_cert }}"
+
+    - name: Configure the Whatcheese Gateway
+      include_role:
+        name: nginx_controller_gateway
+      vars:
+        nginx_controller_environmentName: aks-prod
+        nginx_controller_gateway:
+          metadata:
+            name: cheese-web-gw
+            displayName: Cheese Web Gateway
+          desiredState:
+            ingress:
+              placement:
+                instancerefs:
+                  - ref: /infrastructure/locations/azure-uk/instances/{{ nginx_instance }}
+              uris:
+                'http://www.whatcheese.nginx.demo': {}
+                'https://www.whatcheese.nginx.demo': {}
+              tls:
+                certRef:
+                  ref: "/services/environments/aks-prod/certs/whatcheese-cert"
+                protocols:
+                  - TLSv1.2
+                  - TLSv1.3
+                preferServerCipher: DISABLED
+                sessionCache: SHARED
+
+    - name: Configure the Whatcheese API
+      include_role:
+        name: nginx_controller_gateway
+      vars:
+        nginx_controller_environmentName: aks-prod
+        nginx_controller_gateway:
+          metadata:
+            name: cheese-api-gw
+            displayName: Cheese API GW
+          desiredState:
+            ingress:
+              placement:
+                instancerefs:
+                  - ref: /infrastructure/locations/azure-uk/instances/{{ nginx_instance }}
+              uris:
+                'http://www.whatcheese.nginx.demo': {}
+                'https://www.whatcheese.nginx.demo': {}
+              tls:
+                certRef:
+                  ref: "/services/environments/aks-prod/certs/whatcheese-cert"
+                protocols:
+                  - TLSv1.2
+                  - TLSv1.3
+                preferServerCipher: DISABLED
+                sessionCache: SHARED
+

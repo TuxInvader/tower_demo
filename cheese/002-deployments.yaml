@@ -1,0 +1,121 @@
+---
+- hosts: localhost
+  become: no
+  gather_facts: no
+  vars:
+
+  collections:
+    - kubernetes.core
+
+  tasks:
+
+    - name: Cheese Webv1 Deployment
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: whatcheese-web
+            namespace: whatcheese
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: whatcheese-web
+            template:
+              metadata:
+                labels:
+                  app: whatcheese-web
+              spec:
+                containers:
+                  - name: whatcheese-web
+                    image: tuxinvader/whatcheese-web:latest
+                    ports:
+                      - containerPort: 80
+
+    - name: Cheese Mysql Deployment
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: whatcheese-db
+            namespace: whatcheese
+            labels:
+              app: whatcheese-db
+          spec:
+            selector:
+              matchLabels:
+                app: whatcheese-db
+            replicas: 1
+            template:
+              metadata:
+                labels:
+                  app: whatcheese-db
+              spec:
+                containers:
+                - name: whatcheese-db
+                  image: tuxinvader/whatcheese-db:latest
+                  imagePullPolicy: Always
+                  ports:
+                  - containerPort: 3306
+
+    - name: Cheese API Deployment
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: whatcheese-api
+            namespace: whatcheese
+            labels:
+              app: whatcheese-api
+          spec:
+            selector:
+              matchLabels:
+                app: whatcheese-api
+            replicas: 3
+            template:
+              metadata:
+                labels:
+                  app: whatcheese-api
+              spec:
+                containers:
+                - name: whatcheese-api
+                  image: tuxinvader/whatcheese-api:latest
+                  imagePullPolicy: Always
+                  ports:
+                  - containerPort: 80
+
+
+    - name: Cheese Webv2 Deployment
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: whatcheese-web-v2
+            namespace: whatcheese
+            labels:
+              app: whatcheese-web-v2
+          spec:
+            selector:
+              matchLabels:
+                app: whatcheese-web-v2
+            replicas: 2
+            template:
+              metadata:
+                labels:
+                  app: whatcheese-web-v2
+              spec:
+                containers:
+                - name: whatcheese-web-v2
+                  image: tuxinvader/whatcheese-web-v2:latest
+                  imagePullPolicy: Always
+                  ports:
+                  - containerPort: 80
+
