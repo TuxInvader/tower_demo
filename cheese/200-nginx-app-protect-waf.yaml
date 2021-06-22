@@ -78,8 +78,8 @@
             - name: webv2
               service: whatcheese-web-v2
               port: 80
-            #policies:
-            #  - name: cheese-waf
+            policies:
+              - name: cheese-waf
             routes:
             - path: /
               matches:
@@ -105,8 +105,8 @@
             namespace: whatcheese
           spec:
             host: "api.whatcheese.nginx.demo"
-            #policies:
-            #  - name: cheese-waf
+            policies:
+              - name: cheese-waf
             routes:
             - path: /
               route: api-whatcheese-routes
