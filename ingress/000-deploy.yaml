@@ -1,17 +1,17 @@
 ---
 
 - name: Execute 001-namespace.yaml
-  include: 001-namespace.yaml
+  import_playbook: 001-namespace.yaml
 
 - name: Execute 002-common-resources.yaml
-  include: 002-common-resources.yaml
+  import_playbook: 002-common-resources.yaml
 
 - name: Execute 002-crds.yaml
-  include: 002-crds.yaml
+  import_playbook: 002-crds.yaml
 
 - name: Execute 002-rbac.yaml
-  include: 002-rbac.yaml
+  import_playbook: 002-rbac.yaml
 
 - name: Execute 003-deploy.yaml
-  include: 003-deploy.yaml
+  import_playbook: 003-deploy.yaml
 
