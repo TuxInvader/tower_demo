@@ -30,6 +30,7 @@
               annotations:
                 prometheus.io/scrape: "true"
                 prometheus.io/port: "9113"
+                prometheus.io/path: "/metrics"
               spec:
                 serviceAccountName: nginx-ingress
                 imagePullSecrets:
