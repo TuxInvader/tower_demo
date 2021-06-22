@@ -1,0 +1,153 @@
+---
+- hosts: localhost
+  become: no
+  gather_facts: no
+  vars:
+
+  collections:
+    - kubernetes.core
+
+  tasks:
+
+    # NGINX AP WAF Policy - APPolicy Custom Resource
+    - name: NGINX App Protect Policy CR
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: appprotect.f5.com/v1beta1
+          kind: APPolicy
+          metadata:
+            name: dataguard-blocking
+            namespace: whatcheese
+          spec:
+            policy:
+              name: dataguard_blocking
+              template:
+                name: POLICY_TEMPLATE_NGINX_BASE
+              applicationLanguage: utf-8
+              enforcementMode: blocking
+              blocking-settings:
+                violations:
+                - name: VIOL_DATA_GUARD
+                  alarm: true
+                  block: true
+              data-guard:
+                enabled: true
+                maskData: true
+                creditCardNumbers: true
+                usSocialSecurityNumbers: true
+                enforcementMode: ignore-urls-in-list
+                enforcementUrls: []
+
+
+    # NGINX Policy - Policy Custom Resource
+    # This links NAP, but policy can also be used for rate shaping, ACL, etc
+    - name: NGINX Service Policy CR (links to NAP)
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: k8s.nginx.org/v1
+          kind: Policy
+          metadata:
+            name: cheese-waf
+            namespace: whatcheese
+          spec:
+            waf:
+              apPolicy: dataguard-blocking
+              enable: true
+
+
+    # NGINX Virtual Server - VirtualServer Custom Resource
+    # This provides full ADC configuration, either directly or by included a VirtualServerRoute
+    # Direct routing example
+    - name: NGINX VirtualServer CR for www
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: k8s.nginx.org/v1
+          kind: VirtualServer
+          metadata:
+            name: www-whatcheese-web-vs
+            namespace: whatcheese
+          spec:
+            host: "www.whatcheese.nginx.demo"
+            tls:
+              secret: whatcheese-cert
+            upstreams:
+            - name: webv1
+              service: whatcheese-web
+              port: 80
+            - name: webv2
+              service: whatcheese-web-v2
+              port: 80
+            policies:
+              - name: cheese-waf
+            routes:
+            - path: /
+              matches:
+              - conditions:
+                - cookie: austin
+                  value: yeahBabyYeah
+                action:
+                  pass: webv2
+              action:
+                pass:  webv1
+
+    # NGINX Virtual Server - VirtualServer Custom Resource
+    # This provides full ADC configuration, either directly or by included a VirtualServerRoute
+    # VirtualServerRoute example
+    - name: NGINX VirtualServer CR for API
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: k8s.nginx.org/v1
+          kind: VirtualServer
+          metadata:
+            name: api-whatcheese-web-vs
+            namespace: whatcheese
+          spec:
+            tls:
+              secret: whatcheese-cert
+            host: "api.whatcheese.nginx.demo"
+            policies:
+              - name: cheese-waf
+            routes:
+            - path: /
+              route: api-whatcheese-routes
+
+    # NGINX Virtual Server Route - VirtualServerRoute Custom Resource
+    # This provides routing for the API VirtualServer
+    - name: NGINX VirtualServerRoute Policy CR for API
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: k8s.nginx.org/v1
+          kind: VirtualServerRoute
+          metadata:
+            name: api-whatcheese-routes
+            namespace: whatcheese
+          spec:
+            host: "api.whatcheese.nginx.demo"
+            upstreams:
+            - name: apiv1
+              service: whatcheese-api
+              port: 80
+            subroutes:
+            - path: /
+              action:
+                pass:  apiv1
+            - path: /v1/add
+              matches:
+              - conditions:
+                - argument: psk
+                  value: superSecretKey
+                action:
+                  pass: apiv1
+              action:
+                return:
+                  code: 200
+                  type: application/json
+                  body: |
+                    {\"result\": \"ERROR\", \"details\": \"Please provide the Super Secret Key in the psk field\"}
+
+
