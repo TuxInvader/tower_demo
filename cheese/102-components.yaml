@@ -8,6 +8,10 @@
 
   tasks:
 
+    - name: Retrieve the NGINX Controller auth token
+      include_role:
+        name: nginx_controller_generate_token
+
     - name: Configure the Whatcheese Component
       include_role:
         name: nginx_controller_component
